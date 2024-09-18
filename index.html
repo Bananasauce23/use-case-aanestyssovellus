@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Äänestyssovellus</title>
+</head>
+<body>
+    <h1>Äänestyssovellus</h1>
+    <h2>Rekisteröidy</h2>
+    <label for="kayttajanimi">Käyttäjänimi</label>
+    <input type="text" id="uusinimi" placeholder="Kirjoita käyttäjänimi" name="kayttajanimi" required>
+    <label for="salasana">Salasana</label>
+    <input type="text" id="uusisalasana" placeholder="Kirjoita salasana" name="salasana" required><br><br>
+
+    <label for="tavallinenkayttaja">Tavallinen käyttäjä</label>
+    <input type="radio" id="tavallinenkayttaja" name="kayttajatyyppi" value="tavallinenkayttaja" checked>
+    <label for="yllapitaja">Ylläpitäjä</label>
+    <input type="radio" id="yllapitaja" name="kayttajatyyppi" value="yllapitaja"><br><br>
+
+    <input type="submit" class="tarkistusnapit" id="rekisteroidy" value="Rekisteröidy" onclick=lisaakayttaja()>
+
+    <h2>Kirjaudu sisään</h2>
+    <label for="kayttajanimi">Käyttäjänimi</label>
+    <input type="text" id="vanhakayttajanimi" placeholder="Kirjoita käyttäjänimi" name="kayttajanimi" required>
+    <label for="salasana">Salasana</label>
+    <input type="text" id="vanhasalasana" placeholder="Kirjoita salasana" name="salasana" required><br><br>
+
+    <input type="submit" class="tarkistusnapit" id="kirjaudu" value="Kirjaudu" onclick=tarkistatiedot()>
+</body>
+<script src="script.js"></script>
+</html>

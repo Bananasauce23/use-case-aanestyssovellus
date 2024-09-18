@@ -1,0 +1,37 @@
+body{
+    text-align:center;
+    color:#2B303A;
+    background-color:#EEE5E9;
+    margin:0;
+}
+
+.tarkistusnapit{
+    padding:10px;
+}
+
+div{
+    text-align:center;
+}
+
+h1{
+    color:#EEE5E9;
+    background-color:#2B303A;
+    padding:10px;
+}
+
+button{
+    padding:5px;
+    margin:5px;
+}
+
+ul{
+    margin-left:-40px;
+}
+
+li{
+    list-style:none;
+}
+
+p{
+    display:none;
+}
