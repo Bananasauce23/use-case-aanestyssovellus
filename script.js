@@ -1,6 +1,14 @@
-let kayttajalista = {}
+if (localStorage.getItem("yllapitajat") == null){
+    localStorage.setItem("yllapitajat", JSON.stringify({}))
+}
+let yllapitajat = JSON.parse(localStorage.getItem("yllapitajat"))
+
+if (localStorage.getItem("kayttajalista") == null){
+    localStorage.setItem("kayttajalista", JSON.stringify({}))
+}
+let kayttajalista = JSON.parse(localStorage.getItem("kayttajalista"))
+
 let tavallisetkayttajat = {}
-let yllapitajat = {}
 let nimi = ""
 
 // Lisää uuden käyttäjän
@@ -28,11 +36,14 @@ function lisaakayttaja(){
     if (virhe == false && nimi != "" && salasana != ""){
         if (document.getElementById("tavallinenkayttaja").checked){
             tavallisetkayttajat[nimi] = salasana
+            localStorage.setItem("tavallisetkayttajat", JSON.stringify(tavallisetkayttajat))
         }
         else{
             yllapitajat[nimi] = salasana
+            localStorage.setItem("yllapitajat", JSON.stringify(yllapitajat))
         }
         kayttajalista[nimi] = salasana 
+        localStorage.setItem("kayttajalista", JSON.stringify(kayttajalista))
     }
 }
 

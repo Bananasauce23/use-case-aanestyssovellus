@@ -1,25 +1,56 @@
-window.addEventListener('load', loadData)
 document.addEventListener("load", lisaaYllapitajan())
 document.getElementById("takaisinnappi").addEventListener("click", takaisin)
 
 let i = 0
-let JSONdata = null
 
-//Lataa äänestys-json
-function loadData(){
-    let ajax = new XMLHttpRequest()
-    ajax.onload = function(){
-        JSONdata = JSON.parse(this.responseText)
+//localStorage.clear()
+
+// Tarkistaa localStoragen sisällön
+if (localStorage.getItem("index") == null){
+    localStorage.setItem("index", JSON.stringify(0))
+}
+i = JSON.parse(localStorage.getItem("index"))
+
+if (localStorage.getItem("aanestykset") == null){
+    localStorage.setItem("aanestykset", JSON.stringify({}))
+}
+let aanestykset = JSON.parse(localStorage.getItem("aanestykset"))
+
+for (aanestys in aanestykset){
+    let listaElementti = document.createElement("li")
+    let kuvausListaElementti = document.createElement("p")
+    listaElementti.innerText = aanestykset[aanestys].nimi + " - Puolesta: " + aanestykset[aanestys].puolesta + " - Vastaan: " + aanestykset[aanestys].vastaan
+    listaElementti.id = aanestys
+
+    kuvausListaElementti.innerText = aanestykset[aanestys].kuvaus + " (p = puolesta v = vastaan)"
+    kuvausListaElementti.id = aanestys + "kuvaus"
+
+    document.getElementById("aanestyslista").append(listaElementti)
+    document.getElementById("aanestyslista").append(kuvausListaElementti)
+
+    document.getElementById(aanestys).onclick = function()
+    {   
+        let kohde = event.target
+        let valinta = prompt(aanestykset[kohde.id].kuvaus + " (p = puolesta v = vastaan)")
+        valinta = valinta.toLowerCase()
+        while (valinta != "p" && valinta != "v"){
+            alert("Anna joko p (puolesta) tai v (vastaan).")
+            valinta = prompt(aanestykset[kohde.id].kuvaus + " (p = puolesta v = vastaan)")
+            valinta = valinta.toLowerCase()
+        }
+        if (valinta == "p"){
+            aanestykset[kohde.id].puolesta += 1
+        }
+        else if (valinta == "v"){
+            aanestykset[kohde.id].vastaan += 1
+        }
+        kohde.innerHTML = aanestykset[kohde.id].nimi + " - Puolesta: " + aanestykset[kohde.id].puolesta + " - Vastaan: " + aanestykset[kohde.id].vastaan
     }
-    ajax.open("GET", "aanestykset.json", true)
-    ajax.send()
 }
 
 //Takaisin
 function takaisin(){
-    window.localStorage.setItem("yllapitajat", JSON.stringify(yllapitajat))
     localStorage.setItem("nimi", nimi)
-    window.localStorage.setItem("aanestykset", JSONdata.aanestykset)
     window.location.replace("index.html")
 }
 
@@ -57,9 +88,8 @@ function lisaaAanestys(){
 
         let aanestysNimi = prompt("Anna äänestyksen nimi.")
 
-        while (aanestysNimi.length <= 0){
-            alert("Anna äänestyksen nimi")
-            aanestysNimi = prompt("Anna äänestyksen nimi.")
+        if (aanestysNimi == null){
+            i -= 1
         }
 
         while (aanestysNimi.length <= 0){
@@ -68,6 +98,10 @@ function lisaaAanestys(){
         }
 
         let aanestysKuvaus = prompt("Anna äänestyksen kuvaus.")
+        
+        if (aanestysKuvaus == null){
+            i -= 1
+        }
 
         while (aanestysKuvaus.length <= 0){
             alert("Anna äänestyksen kuvaus")
@@ -78,12 +112,13 @@ function lisaaAanestys(){
         uusiAanestys.id = "aanestys" + i
 
         const aanestyksenKuvaus = document.createElement("p")
-        aanestyksenKuvaus.id = "kuvaus" + i
+        aanestyksenKuvaus.id = "aanestys" + i + "kuvaus"
 
         let string = {"nimi": aanestysNimi, "kuvaus": aanestysKuvaus, "puolesta": 0, "vastaan": 0}
-        JSONdata.aanestykset["aanestys" + i] = string
+        aanestykset["aanestys" + i] = string
+        localStorage.setItem("aanestykset", JSON.stringify(aanestykset))
 
-        uusiAanestys.innerHTML = aanestysNimi + " - Puolesta: " + JSONdata.aanestykset["aanestys" + i].puolesta + " - Vastaan: " + JSONdata.aanestykset["aanestys" + i].vastaan
+        uusiAanestys.innerHTML = aanestykset["aanestys" + i].nimi + " - Puolesta: " + aanestykset["aanestys" + i].puolesta + " - Vastaan: " + aanestykset["aanestys" + i].vastaan
         aanestyksenKuvaus.innerHTML = aanestysKuvaus
 
         document.getElementById("aanestyslista").appendChild(uusiAanestys)
@@ -104,11 +139,11 @@ function poistaAanestys(){
     }
 }
 
-// Näyttää äänestyksen kuvauksen klikatessa ja antaa äänestää
+// Näyttää äänestyksen kuvauksen klikattaessa ja antaa äänestää
 function naytaKuvaus(aanestysKuvaus){
     document.getElementById("aanestys" + i).onclick = function()
     {   
-        let aanestys = event.target
+        let kohde = event.target
         let valinta = prompt(aanestysKuvaus + " (p = puolesta v = vastaan)")
         valinta = valinta.toLowerCase()
         while (valinta != "p" && valinta != "v"){
@@ -117,11 +152,11 @@ function naytaKuvaus(aanestysKuvaus){
             valinta = valinta.toLowerCase()
         }
         if (valinta == "p"){
-            JSONdata.aanestykset[aanestys.id].puolesta += 1
+            aanestykset[kohde.id].puolesta += 1
         }
         else if (valinta == "v"){
-            JSONdata.aanestykset[aanestys.id].vastaan += 1
+            aanestykset[kohde.id].vastaan += 1
         }
-        aanestys.innerHTML = JSONdata.aanestykset[aanestys.id].nimi + " - Puolesta: " + JSONdata.aanestykset[aanestys.id].puolesta + " - Vastaan: " + JSONdata.aanestykset[aanestys.id].vastaan
+        kohde.innerHTML = aanestykset[kohde.id].nimi + " - Puolesta: " + aanestykset[kohde.id].puolesta + " - Vastaan: " + aanestykset[kohde.id].vastaan
     }
 }
