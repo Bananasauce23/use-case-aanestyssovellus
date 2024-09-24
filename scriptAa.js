@@ -1,5 +1,6 @@
 document.addEventListener("load", lisaaYllapitajan())
 document.getElementById("takaisinnappi").addEventListener("click", takaisin)
+document.getElementById("poistanappi").addEventListener("click", poistaAanestys)
 
 let i = 0
 
@@ -40,9 +41,11 @@ for (aanestys in aanestykset){
         }
         if (valinta == "p"){
             aanestykset[kohde.id].puolesta += 1
+            localStorage.setItem("aanestykset", JSON.stringify(aanestykset))
         }
         else if (valinta == "v"){
             aanestykset[kohde.id].vastaan += 1
+            localStorage.setItem("aanestykset", JSON.stringify(aanestykset))
         }
         kohde.innerHTML = aanestykset[kohde.id].nimi + " - Puolesta: " + aanestykset[kohde.id].puolesta + " - Vastaan: " + aanestykset[kohde.id].vastaan
     }
@@ -51,6 +54,7 @@ for (aanestys in aanestykset){
 //Takaisin
 function takaisin(){
     localStorage.setItem("nimi", nimi)
+    localStorage.setItem("index", i)
     window.location.replace("index.html")
 }
 
@@ -131,11 +135,11 @@ function lisaaAanestys(){
 
 // Poistaa äänestyksen
 function poistaAanestys(){
-    document.getElementById("poistaaanestys").onclick = function()
-    {
-        aanestys = event.target
-        document.getElementById(aanestys.id).removeAttribute("onclick", naytaKuvaus)
-        document.getElementById("poistaaanestys").innerHTML = "Valitse äänestys, jonka haluat poistaa"
+    if (document.getElementById("aanestys1")){
+        document.getElementById("poistaaanestys").onclick = function()
+        {
+            document.getElementById("poistaaanestys").innerHTML = "Valitse äänestys, jonka haluat poistaa"
+        }
     }
 }
 
@@ -153,9 +157,11 @@ function naytaKuvaus(aanestysKuvaus){
         }
         if (valinta == "p"){
             aanestykset[kohde.id].puolesta += 1
+            localStorage.setItem('aanestykset', JSON.stringify(aanestykset))
         }
         else if (valinta == "v"){
             aanestykset[kohde.id].vastaan += 1
+            localStorage.setItem('aanestykset', JSON.stringify(aanestykset))
         }
         kohde.innerHTML = aanestykset[kohde.id].nimi + " - Puolesta: " + aanestykset[kohde.id].puolesta + " - Vastaan: " + aanestykset[kohde.id].vastaan
     }
