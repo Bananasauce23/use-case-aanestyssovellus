@@ -19,6 +19,8 @@ if (localStorage.getItem('aanestykset') == null) {
 }
 let aanestykset = JSON.parse(localStorage.getItem('aanestykset'));
 
+printAanestykset();
+
 function checkAdminStatus() {
   let yllapitajalista = window.localStorage.getItem('yllapitajat');
   nimi = localStorage.getItem('nimi');
@@ -31,60 +33,66 @@ function checkAdminStatus() {
   return false;
 }
 
-for (aanestys in aanestykset) {
-  let listaElementti = document.createElement('li');
-  let kuvausListaElementti = document.createElement('p');
-  listaElementti.innerText =
-    aanestykset[aanestys].nimi +
-    ' - Puolesta: ' +
-    aanestykset[aanestys].puolesta +
-    ' - Vastaan: ' +
-    aanestykset[aanestys].vastaan;
-  listaElementti.id = aanestys;
 
-  kuvausListaElementti.innerText =
-    aanestykset[aanestys].kuvaus + ' (p = puolesta v = vastaan)';
-  kuvausListaElementti.id = aanestys + 'kuvaus';
+function printAanestykset() {
+  let lista = document.getElementById('aanestyslista');
+  lista.innerHTML = '';
 
-  listaElementti.appendChild(kuvausListaElementti);
+  for (aanestys in aanestykset) {
+    let listaElementti = document.createElement('li');
+    let kuvausListaElementti = document.createElement('p');
+    listaElementti.innerText =
+      aanestykset[aanestys].nimi +
+      ' - Puolesta: ' +
+      aanestykset[aanestys].puolesta +
+      ' - Vastaan: ' +
+      aanestykset[aanestys].vastaan;
+    listaElementti.id = aanestys;
 
-  if (checkAdminStatus()) {
-    const poistaButton = document.createElement('button');
-    poistaButton.innerText = 'Poista';
-    poistaButton.id = aanestys;
-    listaElementti.appendChild(poistaButton);
-  }
+    kuvausListaElementti.innerText =
+      aanestykset[aanestys].kuvaus + ' (p = puolesta v = vastaan)';
+    kuvausListaElementti.id = aanestys + 'kuvaus';
 
-  document.getElementById('aanestyslista').append(listaElementti);
-  //   document.getElementById('aanestyslista').append(kuvausListaElementti);
+    listaElementti.appendChild(kuvausListaElementti);
 
-  /*   document.getElementById(aanestys).onclick = function () {
-    let kohde = event.target;
-    let valinta = prompt(
-      aanestykset[kohde.id].kuvaus + ' (p = puolesta v = vastaan)'
-    );
-    valinta = valinta.toLowerCase();
-    while (valinta != 'p' && valinta != 'v') {
-      alert('Anna joko p (puolesta) tai v (vastaan).');
-      valinta = prompt(
+    if (checkAdminStatus()) {
+      const poistaButton = document.createElement('button');
+      poistaButton.innerText = 'Poista';
+      poistaButton.id = aanestys;
+      listaElementti.appendChild(poistaButton);
+    }
+
+    document.getElementById('aanestyslista').append(listaElementti);
+    //   document.getElementById('aanestyslista').append(kuvausListaElementti);
+
+    /*   document.getElementById(aanestys).onclick = function () {
+      let kohde = event.target;
+      let valinta = prompt(
         aanestykset[kohde.id].kuvaus + ' (p = puolesta v = vastaan)'
       );
       valinta = valinta.toLowerCase();
-    }
-    if (valinta == 'p') {
-      aanestykset[kohde.id].puolesta += 1;
-      localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
-    } else if (valinta == 'v') {
-      aanestykset[kohde.id].vastaan += 1;
-      localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
-    }
-    kohde.innerHTML =
-      aanestykset[kohde.id].nimi +
-      ' - Puolesta: ' +
-      aanestykset[kohde.id].puolesta +
-      ' - Vastaan: ' +
-      aanestykset[kohde.id].vastaan;
-  }; */
+      while (valinta != 'p' && valinta != 'v') {
+        alert('Anna joko p (puolesta) tai v (vastaan).');
+        valinta = prompt(
+          aanestykset[kohde.id].kuvaus + ' (p = puolesta v = vastaan)'
+        );
+        valinta = valinta.toLowerCase();
+      }
+      if (valinta == 'p') {
+        aanestykset[kohde.id].puolesta += 1;
+        localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
+      } else if (valinta == 'v') {
+        aanestykset[kohde.id].vastaan += 1;
+        localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
+      }
+      kohde.innerHTML =
+        aanestykset[kohde.id].nimi +
+        ' - Puolesta: ' +
+        aanestykset[kohde.id].puolesta +
+        ' - Vastaan: ' +
+        aanestykset[kohde.id].vastaan;
+    }; */
+  }
 }
 
 // Äänestää
@@ -112,13 +120,10 @@ function annaAani(event) {
       aanestykset[kohde.id].vastaan += 1;
       localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
     }
-    kohde.innerHTML =
-      aanestykset[kohde.id].nimi +
-      ' - Puolesta: ' +
-      aanestykset[kohde.id].puolesta +
-      ' - Vastaan: ' +
-      aanestykset[kohde.id].vastaan;
   }
+
+  printAanestykset();
+
 }
 
 //Takaisin
@@ -191,18 +196,20 @@ function lisaaAanestys() {
     aanestykset.push(string);
     localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
 
-    uusiAanestys.innerHTML =
-      aanestykset[aanestykset.length - 1].nimi +
-      ' - Puolesta: ' +
-      aanestykset[aanestykset.length - 1].puolesta +
-      ' - Vastaan: ' +
-      aanestykset[aanestykset.length - 1].vastaan;
-    aanestyksenKuvaus.innerHTML = aanestysKuvaus;
+    printAanestykset();
 
-    document.getElementById('aanestyslista').appendChild(uusiAanestys);
-    document.getElementById('aanestyslista').appendChild(aanestyksenKuvaus);
+    // uusiAanestys.innerHTML =
+    //   aanestykset[aanestykset.length - 1].nimi +
+    //   ' - Puolesta: ' +
+    //   aanestykset[aanestykset.length - 1].puolesta +
+    //   ' - Vastaan: ' +
+    //   aanestykset[aanestykset.length - 1].vastaan;
+    // aanestyksenKuvaus.innerHTML = aanestysKuvaus;
 
-    naytaKuvaus(aanestysKuvaus);
+    // document.getElementById('aanestyslista').appendChild(uusiAanestys);
+    // document.getElementById('aanestyslista').appendChild(aanestyksenKuvaus);
+
+    // naytaKuvaus(aanestysKuvaus);
   };
 }
 
@@ -228,16 +235,11 @@ function naytaKuvaus(aanestysKuvaus) {
     }
     if (valinta == 'p') {
       aanestykset[kohde.id].puolesta += 1;
-      localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
     } else if (valinta == 'v') {
       aanestykset[kohde.id].vastaan += 1;
-      localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
+      
     }
-    kohde.innerHTML =
-      aanestykset[kohde.id].nimi +
-      ' - Puolesta: ' +
-      aanestykset[kohde.id].puolesta +
-      ' - Vastaan: ' +
-      aanestykset[kohde.id].vastaan;
+    localStorage.setItem('aanestykset', JSON.stringify(aanestykset));
+    tulostaAanestykset();
   };
 }
